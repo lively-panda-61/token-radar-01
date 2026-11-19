@@ -88,7 +88,7 @@
     var chg = r.change === null ? '<td class="num">—</td>'
       : '<td class="num ' + (r.change >= 0 ? 'pos' : 'neg') + '">' + pct(r.change) + '</td>';
     return '<tr data-slug="' + esc(r.slug) + '">'
-      + '<td class="num">' + (state.tab === 'live' ? i + 1 : r.rank) + '</td>'
+      + '<td class="num">' + (i + 1) + '</td>'
       + '<td class="name">' + esc(r.name) + (r.watchlist ? '<span class="star" title="On the watchlist">★ watchlist</span>' : '') + '</td>'
       + '<td>' + esc(r.category || '—') + '</td>'
       + '<td>' + esc(r.chains.slice(0, 3).join(', ')) + (r.chains.length > 3 ? ' +' + (r.chains.length - 3) : '') + '</td>'

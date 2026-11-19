@@ -152,26 +152,26 @@ test('browser probe: board renders, filter works, detail opens, sandbox re-ranks
     page.on('pageerror', (e) => errors.push(String(e)));
     page.on('request', (r) => { if (/^https?:/.test(r.url())) external.push(r.url()); });
     await page.goto(`file://${join(OUT_A, 'dashboard/index.html')}`);
-    await page.waitForSelector('tbody tr', { timeout: 10_000 });
-    const rowCount = await page.locator('tbody tr').count();
+    await page.waitForSelector('#board-table tbody tr', { timeout: 10_000 });
+    const rowCount = await page.locator('#board-table tbody tr').count();
     assert.equal(rowCount, 198, `rendered rows ${rowCount}`);
     // filter by category
     await page.selectOption('#category', 'Lending');
-    const lending = await page.locator('tbody tr').count();
+    const lending = await page.locator('#board-table tbody tr').count();
     assert.ok(lending > 0 && lending < 198, `lending rows ${lending}`);
     await page.selectOption('#category', '');
     // detail dialog for rank 1
-    await page.locator('tbody tr').first().click();
+    await page.locator('#board-table tbody tr').first().click();
     await page.waitForSelector('dialog[open]', { timeout: 5_000 });
     const detail = await page.locator('dialog[open]').innerText();
     assert.match(detail, /Implied value/);
     assert.match(detail, /Farm plan/);
     await page.keyboard.press('Escape');
     // sandbox: moving the growth slider changes the top value
-    const before = await page.locator('tbody tr').first().locator('td.value').innerText();
+    const before = await page.locator('#board-table tbody tr').first().locator('td.value').innerText();
     await page.locator('#growth-weight').fill('0.8');
     await page.waitForTimeout(300);
-    const after = await page.locator('tbody tr').first().locator('td.value').innerText();
+    const after = await page.locator('#board-table tbody tr').first().locator('td.value').innerText();
     assert.notEqual(before, after, 'sandbox did not re-rank');
     assert.deepEqual(errors, [], `console errors: ${errors.join(' | ')}`);
     assert.deepEqual(external, [], `external requests: ${external.join(' | ')}`);

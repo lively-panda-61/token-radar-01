@@ -43,17 +43,20 @@ try {
   page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
   const url = `file://${join(outDir, 'dashboard/index.html')}`;
   await page.goto(url);
-  await page.waitForSelector('tbody tr', { timeout: 10_000 });
+  await page.waitForSelector('#board-table tbody tr', { timeout: 10_000 });
 
-  await shot(page, '1-board', async () => {});
+  await shot(page, '1-board', async () => {
+    await page.evaluate(() => window.scrollTo(0, document.querySelector('#board').offsetTop - 8));
+  });
   await shot(page, '2-detail', async () => {
-    await page.locator('tbody tr').first().click();
+    await page.locator('#board-table tbody tr').first().click();
     await page.waitForSelector('dialog[open]', { timeout: 5_000 });
   });
   await page.keyboard.press('Escape');
   await shot(page, '3-filtered', async () => {
     await page.selectOption('#category', 'Lending');
     await page.locator('#watchlist-only').check();
+    await page.evaluate(() => window.scrollTo(0, document.querySelector('#board').offsetTop - 8));
     await page.waitForTimeout(200);
   });
   await page.selectOption('#category', '');
